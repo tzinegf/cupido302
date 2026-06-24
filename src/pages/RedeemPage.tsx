@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { Link, useSearchParams } from 'react-router-dom'
+import { Copy } from 'lucide-react'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
 import { Field, TextInput } from '../components/Field'
@@ -223,16 +224,37 @@ export function RedeemPage() {
                 <div className="text-xl font-semibold tracking-tight text-slate-900">
                   Código <span className="text-slate-500">{result.codigo}</span>
                 </div>
+                <div className="mt-2 text-sm text-slate-600">
+                  Salve esse código para acessar sua mensagem depois.
+                </div>
                 <div className="mt-1 text-sm text-slate-600">
                   Você possui <span className="font-medium">{messageCount}</span>{' '}
                   mensagens ❤️
                 </div>
               </div>
-              <Link to="/" className="w-full sm:w-auto">
-                <Button variant="secondary" className="w-full">
-                  Voltar ao início
+              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                <Button
+                  variant="secondary"
+                  className="w-full sm:w-auto"
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(result.codigo)
+                      toast.success('Código copiado')
+                    } catch {
+                      toast.error('Não foi possível copiar o código')
+                    }
+                  }}
+                >
+                  <Copy className="size-4" />
+                  Copiar código
                 </Button>
-              </Link>
+                <Link to="/" className="w-full sm:w-auto">
+                  <Button variant="secondary" className="w-full">
+                    Voltar ao início
+                  </Button>
+                </Link>
+              </div>
             </div>
           </Card>
 
