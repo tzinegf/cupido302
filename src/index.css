@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-cupido-pink: #ff5d8f;
+  --color-cupido-coral: #ff6b6b;
+  --color-cupido-purple: #8b5cf6;
+  --color-cupido-blue: #60a5fa;
+  --color-cupido-white: #ffffff;
+  --color-cupido-gray: #f8fafc;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
