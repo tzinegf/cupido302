@@ -24,9 +24,18 @@ export function HomePage() {
     const run = async () => {
       setLoading(true)
       try {
-        const { data } = await client.rpc('get_public_stats')
+        const { data, error } = await client.rpc('get_public_stats')
         if (cancelled) return
-        setStats((data as PublicStats | null) ?? null)
+        if (error) {
+          setStats(null)
+          return
+        }
+
+        const normalized = Array.isArray(data)
+          ? (data[0] as PublicStats | undefined)
+          : ((data as PublicStats | null) ?? null)
+
+        setStats(normalized ?? null)
       } finally {
         if (!cancelled) setLoading(false)
       }

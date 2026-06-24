@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import { CheckCircle2, XCircle, RefreshCcw } from 'lucide-react'
 import { Card } from '../components/Card'
@@ -41,7 +41,7 @@ export function ModerationPage() {
 
   const title = useMemo(() => messageStatusLabel[status], [status])
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (!supabase) return
     setLoading(true)
     const { data, error } = await supabase
@@ -60,11 +60,11 @@ export function ModerationPage() {
 
     setRows((data as MensagemRow[]) ?? [])
     setLoading(false)
-  }
+  }, [status])
 
   useEffect(() => {
     void load()
-  }, [status])
+  }, [load])
 
   useEffect(() => {
     const client = supabase
@@ -82,7 +82,17 @@ export function ModerationPage() {
     return () => {
       void client.removeChannel(channel)
     }
-  }, [status])
+  }, [load])
+
+  useEffect(() => {
+    const handler = () => {
+      void load()
+    }
+    window.addEventListener('cupido302_admin_refresh', handler)
+    return () => {
+      window.removeEventListener('cupido302_admin_refresh', handler)
+    }
+  }, [load])
 
   const approve = async (m: MensagemRow) => {
     if (!supabase) return
