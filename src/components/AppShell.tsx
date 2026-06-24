@@ -49,8 +49,8 @@ export function AppShell() {
       </main>
 
       <footer className="mx-auto w-full max-w-5xl px-4 pb-10 pt-4 text-sm text-slate-500">
-        <div className="rounded-3xl bg-white/40 ring-1 ring-black/5 backdrop-blur px-5 py-4">
-          <span className="inline-flex items-center gap-2">
+        <div className="rounded-3xl bg-white/40 ring-1 ring-black/5 backdrop-blur px-5 py-4 text-center">
+          <span className="inline-flex items-center justify-center gap-2">
             Desenvolvido por
             <img
               src={meuIcone}
