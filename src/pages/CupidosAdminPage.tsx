@@ -33,20 +33,24 @@ export function CupidosAdminPage() {
   const load = async () => {
     if (!supabase) return
     setLoading(true)
-    const { data, error } = await supabase
-      .from('cupidos')
-      .select('id,email,created_at')
-      .order('created_at', { ascending: false })
-      .limit(500)
+    try {
+      const { data, error } = await supabase
+        .from('cupidos')
+        .select('id,email,created_at')
+        .order('created_at', { ascending: false })
+        .limit(500)
 
-    if (error) {
+      if (error) {
+        toast.error('Falha ao carregar cupidos')
+        return
+      }
+
+      setRows((data as CupidoRow[]) ?? [])
+    } catch {
       toast.error('Falha ao carregar cupidos')
+    } finally {
       setLoading(false)
-      return
     }
-
-    setRows((data as CupidoRow[]) ?? [])
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -175,4 +179,3 @@ export function CupidosAdminPage() {
     </div>
   )
 }
-

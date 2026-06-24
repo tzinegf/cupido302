@@ -27,14 +27,18 @@ export function CupidoCentralPage() {
   const load = async () => {
     if (!supabase) return
     setLoading(true)
-    const { data, error } = await supabase.rpc('get_cupido_queue')
-    if (error) {
+    try {
+      const { data, error } = await supabase.rpc('get_cupido_queue')
+      if (error) {
+        toast.error('Falha ao carregar a fila')
+        return
+      }
+      setRows((data as CupidoQueueRow[]) ?? [])
+    } catch {
       toast.error('Falha ao carregar a fila')
+    } finally {
       setLoading(false)
-      return
     }
-    setRows((data as CupidoQueueRow[]) ?? [])
-    setLoading(false)
   }
 
   useEffect(() => {

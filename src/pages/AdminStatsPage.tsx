@@ -28,53 +28,56 @@ export function AdminStatsPage() {
   const load = async () => {
     if (!supabase) return
     setLoading(true)
+    try {
+      const [total, pendentes, aguardando, entregues, rejeitadas, participantes] =
+        await Promise.all([
+          supabase.from('mensagens').select('id', { count: 'exact', head: true }),
+          supabase
+            .from('mensagens')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'PENDENTE_MODERACAO'),
+          supabase
+            .from('mensagens')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'AGUARDANDO_DESTINATARIO'),
+          supabase
+            .from('mensagens')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'ENTREGUE'),
+          supabase
+            .from('mensagens')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'REJEITADA'),
+          supabase.from('usuarios').select('id', { count: 'exact', head: true }),
+        ])
 
-    const [total, pendentes, aguardando, entregues, rejeitadas, participantes] =
-      await Promise.all([
-        supabase.from('mensagens').select('id', { count: 'exact', head: true }),
-        supabase
-          .from('mensagens')
-          .select('id', { count: 'exact', head: true })
-          .eq('status', 'PENDENTE_MODERACAO'),
-        supabase
-          .from('mensagens')
-          .select('id', { count: 'exact', head: true })
-          .eq('status', 'AGUARDANDO_DESTINATARIO'),
-        supabase
-          .from('mensagens')
-          .select('id', { count: 'exact', head: true })
-          .eq('status', 'ENTREGUE'),
-        supabase
-          .from('mensagens')
-          .select('id', { count: 'exact', head: true })
-          .eq('status', 'REJEITADA'),
-        supabase.from('usuarios').select('id', { count: 'exact', head: true }),
-      ])
+      const errors = [
+        total.error,
+        pendentes.error,
+        aguardando.error,
+        entregues.error,
+        rejeitadas.error,
+        participantes.error,
+      ].filter(Boolean)
 
-    const errors = [
-      total.error,
-      pendentes.error,
-      aguardando.error,
-      entregues.error,
-      rejeitadas.error,
-      participantes.error,
-    ].filter(Boolean)
+      if (errors.length > 0) {
+        toast.error('Falha ao carregar estatísticas')
+        return
+      }
 
-    if (errors.length > 0) {
+      setCounts({
+        totalMensagens: total.count ?? 0,
+        pendentes: pendentes.count ?? 0,
+        aguardando: aguardando.count ?? 0,
+        entregues: entregues.count ?? 0,
+        rejeitadas: rejeitadas.count ?? 0,
+        participantes: participantes.count ?? 0,
+      })
+    } catch {
       toast.error('Falha ao carregar estatísticas')
+    } finally {
       setLoading(false)
-      return
     }
-
-    setCounts({
-      totalMensagens: total.count ?? 0,
-      pendentes: pendentes.count ?? 0,
-      aguardando: aguardando.count ?? 0,
-      entregues: entregues.count ?? 0,
-      rejeitadas: rejeitadas.count ?? 0,
-      participantes: participantes.count ?? 0,
-    })
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -135,4 +138,3 @@ function Pill({ title, value }: { title: string; value: number }) {
     </div>
   )
 }
-

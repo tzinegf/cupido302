@@ -32,19 +32,23 @@ export function ParticipantsPage() {
   const load = async () => {
     if (!supabase) return
     setLoading(true)
-    const { data, error } = await supabase
-      .from('usuarios')
-      .select('id,nome,sobrenome,apelido,turma,created_at')
-      .order('created_at', { ascending: false })
-      .limit(500)
+    try {
+      const { data, error } = await supabase
+        .from('usuarios')
+        .select('id,nome,sobrenome,apelido,turma,created_at')
+        .order('created_at', { ascending: false })
+        .limit(500)
 
-    if (error) {
+      if (error) {
+        toast.error('Falha ao carregar participantes')
+        return
+      }
+      setRows((data as UsuarioRow[]) ?? [])
+    } catch {
       toast.error('Falha ao carregar participantes')
+    } finally {
       setLoading(false)
-      return
     }
-    setRows((data as UsuarioRow[]) ?? [])
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -109,4 +113,3 @@ export function ParticipantsPage() {
     </div>
   )
 }
-

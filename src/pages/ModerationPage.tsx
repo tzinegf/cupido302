@@ -44,22 +44,26 @@ export function ModerationPage() {
   const load = useCallback(async () => {
     if (!supabase) return
     setLoading(true)
-    const { data, error } = await supabase
-      .from('mensagens')
-      .select(
-        'id,destinatario_nome,destinatario_sobrenome,destinatario_apelido,destinatario_turma,claim_code,emissor_nome,emissor_sobrenome,emissor_apelido,emissor_turma,mensagem,anonima,status,created_at,approved_at,delivered_at',
-      )
-      .eq('status', status)
-      .order('created_at', { ascending: false })
+    try {
+      const { data, error } = await supabase
+        .from('mensagens')
+        .select(
+          'id,destinatario_nome,destinatario_sobrenome,destinatario_apelido,destinatario_turma,claim_code,emissor_nome,emissor_sobrenome,emissor_apelido,emissor_turma,mensagem,anonima,status,created_at,approved_at,delivered_at',
+        )
+        .eq('status', status)
+        .order('created_at', { ascending: false })
 
-    if (error) {
+      if (error) {
+        toast.error('Falha ao carregar mensagens')
+        return
+      }
+
+      setRows((data as MensagemRow[]) ?? [])
+    } catch {
       toast.error('Falha ao carregar mensagens')
+    } finally {
       setLoading(false)
-      return
     }
-
-    setRows((data as MensagemRow[]) ?? [])
-    setLoading(false)
   }, [status])
 
   useEffect(() => {
