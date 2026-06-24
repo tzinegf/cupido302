@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { HandHeart, Shield, Sparkles } from 'lucide-react'
 import { Logo } from './Logo'
 import { Button } from './Button'
-import meuIcone from './assets/java.png'; // ou .png
+import meuIcone from '../assets/java.png'
 
 export function AppShell() {
   const location = useLocation()
@@ -50,7 +50,8 @@ export function AppShell() {
 
       <footer className="mx-auto w-full max-w-5xl px-4 pb-10 pt-4 text-sm text-slate-500">
         <div className="rounded-3xl bg-white/40 ring-1 ring-black/5 backdrop-blur px-5 py-4">
-          Desenvolvido por <img src={meuIcone} alt="Descrição do Ícone" style={{ width: '24px', height: '24px' }} />.
+          Desenvolvido por{' '}
+          <img src={meuIcone} alt="Descrição do Ícone" style={{ width: '24px', height: '24px' }} />.
         </div>
       </footer>
     </div>
