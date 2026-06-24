@@ -34,8 +34,20 @@ export function HomePage() {
 
     void run()
 
+    const channel = client
+      .channel('public_stats')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'mensagens' },
+        () => {
+          void run()
+        },
+      )
+      .subscribe()
+
     return () => {
       cancelled = true
+      void client.removeChannel(channel)
     }
   }, [])
 
@@ -51,7 +63,7 @@ export function HomePage() {
             Sistema de Correio Elegante Digital
           </div>
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            Conectando corações, uma mensagem por vez ❤️
+            O app oficial para farmar aura com o crush.
           </h1>
           <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
             Envie recados com privacidade. As mensagens passam por moderação e só
@@ -87,7 +99,7 @@ export function HomePage() {
           icon={<Mail className="size-5" />}
         />
         <StatCard
-          title="Participantes cadastrados"
+          title="Pessoas que já enviaram uma mensagem"
           value={loading ? '—' : String(stats?.total_participantes ?? 0)}
           icon={<Users className="size-5" />}
         />

@@ -9,6 +9,15 @@ import { SetupRequired } from '../components/SetupRequired'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 import { normalizeHumanText, normalizeOptional } from '../lib/normalize'
 
+function getSenderFingerprint() {
+  const key = 'cupido302_sender_fp'
+  const existing = localStorage.getItem(key)
+  if (existing) return existing
+  const fp = crypto.randomUUID()
+  localStorage.setItem(key, fp)
+  return fp
+}
+
 const STANDARD_MESSAGES = [
   'Você é uma pessoa muito especial para mim.',
   'Adorei lhe conhecer.',
@@ -66,6 +75,7 @@ export function SendMessagePage() {
   const onSubmit = handleSubmit(async (values) => {
     if (!supabase) return
     setSubmitting(true)
+    const senderFingerprint = getSenderFingerprint()
     const destinatarioNome = normalizeHumanText(values.nome)
     const destinatarioSobrenome = normalizeHumanText(values.sobrenome)
     const destinatarioApelido = normalizeOptional(values.apelido) ?? null
@@ -91,6 +101,7 @@ export function SendMessagePage() {
       destinatario_sobrenome: destinatarioSobrenome,
       destinatario_apelido: destinatarioApelido,
       destinatario_turma: destinatarioTurma,
+      sender_fingerprint: senderFingerprint,
       emissor_nome: emissorNome,
       emissor_sobrenome: emissorSobrenome,
       emissor_apelido: emissorApelido,

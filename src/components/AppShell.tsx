@@ -49,7 +49,7 @@ export function AppShell() {
 
       <footer className="mx-auto w-full max-w-5xl px-4 pb-10 pt-4 text-sm text-slate-500">
         <div className="rounded-3xl bg-white/40 ring-1 ring-black/5 backdrop-blur px-5 py-4">
-          Conectando corações, uma mensagem por vez ❤️
+          O app oficial para farmar aura com o crush.
         </div>
       </footer>
     </div>

@@ -27,6 +27,7 @@ create table if not exists public.mensagens (
   destinatario_sobrenome text not null,
   destinatario_apelido text null,
   destinatario_turma text null,
+  sender_fingerprint text null,
   emissor_nome text null,
   emissor_sobrenome text null,
   emissor_apelido text null,
@@ -46,6 +47,7 @@ alter table public.mensagens add column if not exists emissor_sobrenome text nul
 alter table public.mensagens add column if not exists emissor_apelido text null;
 alter table public.mensagens add column if not exists emissor_turma text null;
 alter table public.mensagens add column if not exists claim_code text null;
+alter table public.mensagens add column if not exists sender_fingerprint text null;
 
 create table if not exists public.administradores (
   id uuid primary key references auth.users (id) on delete cascade,
@@ -190,7 +192,7 @@ as $$
   select
     (select count(*) from public.mensagens)::bigint as total_mensagens,
     (select count(*) from public.mensagens where status = 'ENTREGUE')::bigint as total_entregues,
-    (select count(*) from public.usuarios)::bigint as total_participantes;
+    (select count(distinct sender_fingerprint) from public.mensagens where sender_fingerprint is not null)::bigint as total_participantes;
 $$;
 
 create or replace function public.get_participante_perfil(p_usuario_id uuid)
