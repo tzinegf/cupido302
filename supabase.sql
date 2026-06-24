@@ -281,7 +281,7 @@ begin
       m.emissor_turma,
       m.created_at
     from public.mensagens m
-    where m.status = 'AGUARDANDO_DESTINATARIO'
+    where m.status in ('AGUARDANDO_DESTINATARIO', 'ENTREGUE')
       and upper(coalesce(m.claim_code, '')) = v_codigo
   )
   select jsonb_agg(
@@ -394,7 +394,6 @@ end $$;
 
 drop function if exists public.resgatar_mensagens(text, text, text, text);
 drop function if exists public.resgatar_mensagens(text, text, text, text, text);
-drop function if exists public.resgatar_por_codigo(text);
 create or replace function public.resgatar_mensagens(
   p_nome text,
   p_sobrenome text,

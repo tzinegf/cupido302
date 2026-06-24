@@ -56,7 +56,7 @@ begin
       m.emissor_turma,
       m.created_at
     from public.mensagens m
-    where m.status = 'AGUARDANDO_DESTINATARIO'
+    where m.status in ('AGUARDANDO_DESTINATARIO', 'ENTREGUE')
       and upper(coalesce(m.claim_code, '')) = v_codigo
   )
   select jsonb_agg(
