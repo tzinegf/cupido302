@@ -213,41 +213,6 @@ export function RedeemPage() {
           </pre>
         </Card>
       ) : null}
-      <Card className="p-6 sm:p-8">
-        <div className="space-y-2">
-          <div className="text-2xl font-semibold tracking-tight text-slate-900">
-            Resgatar mensagens
-          </div>
-          <div className="text-sm text-slate-600">
-            Para ler a mensagem, use o QR Code recebido ou informe o código do
-            resgate. Não pedimos telefone, e-mail ou redes sociais.
-          </div>
-        </div>
-      </Card>
-
-      <Card className="p-6 sm:p-8">
-        <form className="space-y-5" onSubmit={onSubmit}>
-          <div className="grid gap-4">
-            <Field label="Código de resgate" error={errors.codigo?.message} hint="Obrigatório">
-              <TextInput
-                placeholder="Ex: A1B2C3D4E5F6"
-                autoComplete="one-time-code"
-                {...register('codigo', { required: 'Informe o código' })}
-              />
-            </Field>
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-sm text-slate-600">
-              Ao encontrar mensagens, o sistema marca como{' '}
-              <span className="font-medium">ENTREGUE</span>.
-            </div>
-            <Button type="submit" disabled={submitting} size="lg">
-              Resgatar
-            </Button>
-          </div>
-        </form>
-      </Card>
 
       {result ? (
         <div className="space-y-4">
@@ -300,6 +265,42 @@ export function RedeemPage() {
           </div>
         </div>
       ) : null}
+
+      <Card className="p-6 sm:p-8">
+        <div className="space-y-2">
+          <div className="text-2xl font-semibold tracking-tight text-slate-900">
+            Resgatar mensagens
+          </div>
+          <div className="text-sm text-slate-600">
+            Para ler a mensagem, use o QR Code recebido ou informe o código do
+            resgate. Não pedimos telefone, e-mail ou redes sociais.
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-6 sm:p-8">
+        <form className="space-y-5" onSubmit={onSubmit}>
+          <div className="grid gap-4">
+            <Field label="Código de resgate" error={errors.codigo?.message} hint="Obrigatório">
+              <TextInput
+                placeholder="Ex: A1B2C3D4E5F6"
+                autoComplete="one-time-code"
+                {...register('codigo', { required: 'Informe o código' })}
+              />
+            </Field>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-sm text-slate-600">
+              Ao encontrar mensagens, o sistema marca como{' '}
+              <span className="font-medium">ENTREGUE</span>.
+            </div>
+            <Button type="submit" disabled={submitting} size="lg">
+              Resgatar
+            </Button>
+          </div>
+        </form>
+      </Card>
     </div>
   )
 }
