@@ -50,8 +50,7 @@ export function AppShell() {
 
       <footer className="mx-auto w-full max-w-5xl px-4 pb-10 pt-4 text-sm text-slate-500">
         <div className="rounded-3xl bg-white/40 ring-1 ring-black/5 backdrop-blur px-5 py-4">
-          Desenvolvido por{' '}
-          <img src={meuIcone} alt="Descrição do Ícone" style={{ width: '24px', height: '24px' }} />.
+          Desenvolvido por{' '}<img src={meuIcone} alt="Descrição do Ícone" style={{ width: '24px', height: '24px' }} />.
         </div>
       </footer>
     </div>
