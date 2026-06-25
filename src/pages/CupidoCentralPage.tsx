@@ -27,6 +27,9 @@ export function CupidoCentralPage() {
   const load = async () => {
     if (!supabase) return
     setLoading(true)
+    const watchdogId = window.setTimeout(() => {
+      setLoading(false)
+    }, 12000)
     try {
       const { data, error } = await supabase.rpc('get_cupido_queue')
       if (error) {
@@ -37,12 +40,25 @@ export function CupidoCentralPage() {
     } catch {
       toast.error('Falha ao carregar a fila')
     } finally {
+      window.clearTimeout(watchdogId)
       setLoading(false)
     }
   }
 
   useEffect(() => {
     void load()
+  }, [])
+
+  useEffect(() => {
+    const handler = () => {
+      if (document.visibilityState === 'visible') void load()
+    }
+    document.addEventListener('visibilitychange', handler)
+    window.addEventListener('focus', handler)
+    return () => {
+      document.removeEventListener('visibilitychange', handler)
+      window.removeEventListener('focus', handler)
+    }
   }, [])
 
   return (

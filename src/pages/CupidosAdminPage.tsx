@@ -33,6 +33,9 @@ export function CupidosAdminPage() {
   const load = async () => {
     if (!supabase) return
     setLoading(true)
+    const watchdogId = window.setTimeout(() => {
+      setLoading(false)
+    }, 12000)
     try {
       const { data, error } = await supabase
         .from('cupidos')
@@ -49,12 +52,25 @@ export function CupidosAdminPage() {
     } catch {
       toast.error('Falha ao carregar cupidos')
     } finally {
+      window.clearTimeout(watchdogId)
       setLoading(false)
     }
   }
 
   useEffect(() => {
     void load()
+  }, [])
+
+  useEffect(() => {
+    const handler = () => {
+      if (document.visibilityState === 'visible') void load()
+    }
+    document.addEventListener('visibilitychange', handler)
+    window.addEventListener('focus', handler)
+    return () => {
+      document.removeEventListener('visibilitychange', handler)
+      window.removeEventListener('focus', handler)
+    }
   }, [])
 
   const onSubmit = handleSubmit(async (values) => {

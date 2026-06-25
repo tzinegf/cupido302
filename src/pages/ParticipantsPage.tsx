@@ -32,6 +32,9 @@ export function ParticipantsPage() {
   const load = async () => {
     if (!supabase) return
     setLoading(true)
+    const watchdogId = window.setTimeout(() => {
+      setLoading(false)
+    }, 12000)
     try {
       const { data, error } = await supabase
         .from('usuarios')
@@ -47,12 +50,25 @@ export function ParticipantsPage() {
     } catch {
       toast.error('Falha ao carregar participantes')
     } finally {
+      window.clearTimeout(watchdogId)
       setLoading(false)
     }
   }
 
   useEffect(() => {
     void load()
+  }, [])
+
+  useEffect(() => {
+    const handler = () => {
+      if (document.visibilityState === 'visible') void load()
+    }
+    document.addEventListener('visibilitychange', handler)
+    window.addEventListener('focus', handler)
+    return () => {
+      document.removeEventListener('visibilitychange', handler)
+      window.removeEventListener('focus', handler)
+    }
   }, [])
 
   return (

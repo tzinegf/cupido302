@@ -44,6 +44,9 @@ export function ModerationPage() {
   const load = useCallback(async () => {
     if (!supabase) return
     setLoading(true)
+    const watchdogId = window.setTimeout(() => {
+      setLoading(false)
+    }, 12000)
     try {
       const { data, error } = await supabase
         .from('mensagens')
@@ -62,6 +65,7 @@ export function ModerationPage() {
     } catch {
       toast.error('Falha ao carregar mensagens')
     } finally {
+      window.clearTimeout(watchdogId)
       setLoading(false)
     }
   }, [status])
@@ -95,6 +99,18 @@ export function ModerationPage() {
     window.addEventListener('cupido302_admin_refresh', handler)
     return () => {
       window.removeEventListener('cupido302_admin_refresh', handler)
+    }
+  }, [load])
+
+  useEffect(() => {
+    const handler = () => {
+      if (document.visibilityState === 'visible') void load()
+    }
+    document.addEventListener('visibilitychange', handler)
+    window.addEventListener('focus', handler)
+    return () => {
+      document.removeEventListener('visibilitychange', handler)
+      window.removeEventListener('focus', handler)
     }
   }, [load])
 
